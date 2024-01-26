@@ -6,4 +6,8 @@ interface ShoppinglistRepo {
     fun getAll(): Flow<List<ShoppingListEntity>>
 
     suspend fun insert(shoppingRow: ShoppingListEntity)
+
+    suspend fun delete(shoppingRow: ShoppingListEntity)
+
+    suspend fun update(shoppingRow: ShoppingListEntity)
 }

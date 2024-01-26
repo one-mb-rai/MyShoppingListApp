@@ -12,4 +12,12 @@ class OfflineShoppingRepo(private val shoppingListDao: ShoppingListDao) : Shoppi
         shoppingListDao.insert(shoppingRow)
     }
 
+    override suspend fun delete(shoppingRow: ShoppingListEntity) {
+        shoppingListDao.delete(shoppingRow)
+    }
+
+    override suspend fun update(shoppingRow: ShoppingListEntity) {
+        shoppingListDao.update(shoppingRow)
+    }
+
 }

@@ -13,7 +13,7 @@ class AppContainer(private val context: Context) {
         database.shoppingListDao()
     }
 
-    val shoppomgListRepo: ShoppinglistRepo by lazy {
+    val shoppingListRepo: ShoppinglistRepo by lazy {
         OfflineShoppingRepo(shoppingListDao)
     }
 }

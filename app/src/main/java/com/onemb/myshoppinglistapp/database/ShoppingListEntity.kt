@@ -9,5 +9,6 @@ data class ShoppingListEntity(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "itemName") val itemName: String,
     @ColumnInfo(name = "itemQuantity") val itemQuantity: String,
-    @ColumnInfo(name = "itemEditedOn") val itemEditedOn: String
+    @ColumnInfo(name = "itemEditedOn") val itemEditedOn: String,
+    @ColumnInfo(name = "markCompleted") val markCompleted: Boolean
 )

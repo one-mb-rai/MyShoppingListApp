@@ -1,5 +1,7 @@
 package com.onemb.myshoppinglistapp
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,8 +21,10 @@ import com.onemb.myshoppinglistapp.database.ShoppingListEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AlertDialogApp(
     showDialog: MutableState<Boolean>,
@@ -28,7 +32,9 @@ fun AlertDialogApp(
     quantity: MutableState<String>,
     list: State<List<ShoppingListEntity>>,
     dateSelected: MutableState<String>,
-    viewModel: ShoppingListViewModel
+    viewModel: ShoppingListViewModel,
+    id: String,
+    editMode: Boolean,
 ) {
     val context = LocalContext.current
     val modifier =  Modifier.padding(8.dp)
@@ -42,15 +48,27 @@ fun AlertDialogApp(
                 ) {
                     Button(onClick = {
                         if(itemName.value != "") {
+                            val uId : Int
+                            if(id != "null") {
+                                uId = id.toInt()
+                            } else {
+                                uId = list.value.size + 1
+                            }
                             val newItem =  ShoppingListEntity (
-                                id = list.value.size + 1,
+                                id = uId,
                                 itemName = itemName.value,
                                 itemQuantity = quantity.value,
-                                itemEditedOn = dateSelected.value
+                                itemEditedOn = LocalDate.now().toString(),
+                                markCompleted = false
                             )
                             context.let {
                                 CoroutineScope(Dispatchers.Default).launch {
-                                    viewModel.insertShoppingItem(newItem)
+                                    if(editMode) {
+                                        viewModel.updateShoppingItem(newItem)
+                                    } else {
+                                        viewModel.insertShoppingItem(newItem)
+                                    }
+
                                 }
                             }
                             itemName.value = ""
@@ -58,7 +76,11 @@ fun AlertDialogApp(
                             showDialog.value = false
                         }
                     }) {
-                        Text(text = "Add")
+                        if(editMode) {
+                            Text(text = "Edit")
+                        } else {
+                            Text(text = "Add")
+                        }
                     }
                     Button(onClick = {
                         itemName.value = ""
